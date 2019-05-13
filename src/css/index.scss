@@ -1,0 +1,41 @@
+// triangulator2-app
+// Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
+
+@import "variables";
+@import "~bootstrap/scss/bootstrap";
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  overflow: hidden;
+}
+
+code {
+  font-family: "Roboto Mono", monospace;
+  font-size: 0.8rem;
+  color: $gray-100;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0);
+  border-radius: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $gray-800;
+  border-radius: 16px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $gray-700;
+}

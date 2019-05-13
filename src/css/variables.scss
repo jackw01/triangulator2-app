@@ -1,0 +1,89 @@
+// triangulator2-app
+// Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
+
+// Custom
+$large-breakpoint: 1024px;
+$medium-breakpoint: 640px;
+
+$background-1: #1f2124;
+$foreground-lighter: #e2e8f5;
+$foreground-1: #c4c9d6;
+
+$border-color: #525762;
+
+$color-accent: #06a2ab;
+$color-accent-lighter: lighten($color-accent, 7%);
+$color-accent-darker: darken($color-accent, 7%);
+
+$color-accent-alt: #e2326f;
+$color-accent-alt-lighter: lighten($color-accent-alt, 7%);
+$color-accent-alt-darker: darken($color-accent-alt, 7%);
+
+$color-success: #00ab9a;
+$color-warning: #d08447;
+$color-danger: #f06c6f;
+
+// Bootstrap
+$gray-100: #e6e8ec;
+$gray-200: #caccd0;
+$gray-300: #afb1b4;
+$gray-400: #95979a;
+$gray-500: #7b7d80;
+$gray-600: #626467;
+$gray-700: #4b4d4f;
+$gray-800: #343639;
+$gray-900: #1f2124;
+
+$grays: (
+  "100": $gray-100,
+  "200": $gray-200,
+  "300": $gray-300,
+  "400": $gray-400,
+  "500": $gray-500,
+  "600": $gray-600,
+  "700": $gray-700,
+  "800": $gray-800,
+  "900": $gray-900
+);
+
+$theme-colors: (
+  "primary": $color-accent,
+  "secondary": $gray-700,
+  "success": $color-success,
+  "danger": $color-danger,
+  "warning": $color-warning,
+  "info": $color-accent-alt
+);
+
+$body-bg: $gray-900;
+$body-color: $gray-200;
+
+$yiq-contrasted-threshold: 110;
+$yiq-text-light: $foreground-1;
+$yiq-text-dark: $gray-900;
+
+$border-radius: .2rem;
+$border-radius-lg: .3rem;
+$border-radius-sm: .15rem;
+
+$enable-shadows: true;
+
+$btn-border-width: 0px;
+$btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 0 rgba(0, 0, 0, .15);
+$btn-focus-box-shadow: inset 0 1px 0 rgba(0, 0, 0, .4), 0 1px 0 rgba(255, 255, 255, .25);
+$btn-active-box-shadow: $btn-focus-box-shadow;
+
+$input-bg: $gray-800;
+$input-disabled-bg: $gray-700;
+
+$input-color: $gray-200;
+$input-border-color: $gray-500;
+$input-border-width: 0px;
+$input-box-shadow: inset 0 1px 0 rgba(0, 0, 0, .25), 0 1px 0 rgba(255, 255, 255, .15);
+
+$card-bg: lighten($gray-900, 2%);
+
+$modal-content-bg: $gray-900;
+$modal-header-border-color: $gray-800;
+
+$hr-border-color: $gray-800;
