@@ -14,7 +14,8 @@
     "react-dom": "^16.8.6",
     "react-icons": "^3.7.0",
     "react-scripts": "^3.0.1",
-    "reactstrap": "^8.0.0"
+    "reactstrap": "^8.0.0",
+    "triangulator2": "github:jackw01/triangulator2"
   },
   "devDependencies": {
     "eslint": "^5.8.0",
