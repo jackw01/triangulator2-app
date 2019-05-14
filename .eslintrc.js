@@ -24,6 +24,7 @@ module.exports = {
       "class-methods-use-this": 0,
       "object-curly-newline": 0,
       "no-console": 0,
-      "jsx-quotes": 0
+      "jsx-quotes": 0,
+      "react/destructuring-assignment": 0
     }
 };
