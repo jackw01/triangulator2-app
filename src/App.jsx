@@ -2,7 +2,7 @@
 // Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
 import React, { Component } from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Form, FormGroup, Label, Input } from 'reactstrap';
 import Triangulator from 'triangulator2';
 
 class App extends Component {
@@ -14,6 +14,14 @@ class App extends Component {
       svgH: 2400,
       svgSizeCSS: { width: '', height: '' },
     };
+  }
+
+  updateOptions(event) {
+    console.log(event.target);
+    const updatedState = { svgNeedsUpdating: true };
+    updatedState[event.target.id] = parseInt(event.target.value, 10);
+    this.setState(updatedState);
+    this.forceUpdate();
   }
 
   generateSVG(element) {
@@ -57,13 +65,39 @@ class App extends Component {
       <div className='main h-100'>
         <svg
           id='image'
+          //key={this.state.svgNeedsUpdating}
           style={this.state.svgSizeCSS}
           viewBox={`0 0 ${this.state.svgW} ${this.state.svgH}`}
           ref={this.generateSVG.bind(this)}
         />
-        <div className='image-container'>
-
-        </div>
+        <Form className='controls-container'>
+          <FormGroup>
+            <Label className='input-group-label' for='resolution'>Resolution:</Label>
+            <Input
+              id='svgW'
+              className='input-inline-small'
+              bsSize='sm'
+              type='number'
+              step='1'
+              min='0'
+              max='8192'
+              defaultValue={this.state.svgW}
+              onChange={this.updateOptions.bind(this)}
+            />
+            &nbsp;x&nbsp;
+            <Input
+              id='svgH'
+              className='input-inline-small'
+              bsSize='sm'
+              type='number'
+              step='1'
+              min='0'
+              max='8192'
+              defaultValue={this.state.svgH}
+              onChange={this.updateOptions.bind(this)}
+            />
+          </FormGroup>
+        </Form>
       </div>
     );
   }
