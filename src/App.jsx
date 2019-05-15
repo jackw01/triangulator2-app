@@ -10,29 +10,11 @@ class App extends Component {
     super(props);
     this.state = {
       svgNeedsUpdating: true,
-      svgW: 3840,
-      svgH: 2400,
       svgSizeCSS: { width: '', height: '' },
-    };
-  }
-
-  updateOptions(event) {
-    console.log(event.target);
-    const updatedState = { svgNeedsUpdating: true };
-    updatedState[event.target.id] = parseInt(event.target.value, 10);
-    this.setState(updatedState);
-    this.forceUpdate();
-  }
-
-  generateSVG(element) {
-    const { svgNeedsUpdating, svgW, svgH } = this.state;
-    if (svgNeedsUpdating) {
-      const svgString = Triangulator.generate({
-        svgInput: element,
-        forceSVGSize: false,
+      options: {
         seed: 4,
-        width: svgW,
-        height: svgH,
+        width: 3840,
+        height: 2400,
         gridMode: Triangulator.GridMode.Poisson,
         gridOverride: false,
         cellSize: 150,
@@ -48,15 +30,33 @@ class App extends Component {
         gradientPositiveFactor: 0.03,
         strokeColor: false,
         strokeWidth: 1,
+      },
+    };
+  }
+
+  updateOptions(event) {
+    console.log(event.target);
+    const updatedState = { svgNeedsUpdating: true, options: this.state.options };
+    updatedState.options[event.target.id] = parseInt(event.target.value, 10);
+    this.setState(updatedState);
+  }
+
+  async generateSVG(element) {
+    const { svgNeedsUpdating, options } = this.state;
+    if (svgNeedsUpdating) {
+      await this.setState({ svgNeedsUpdating: false });
+      const svgString = Triangulator.generate({
+        svgInput: element,
+        forceSVGSize: false,
+        ...options,
       });
 
       const windowAspect = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
         / Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
       const svgSizeCSS = { width: '', height: '' };
-      if ((svgW / svgH) > windowAspect) svgSizeCSS.width = '100%';
+      if ((options.width / options.height) > windowAspect) svgSizeCSS.width = '100%';
       else svgSizeCSS.height = '100%';
-
-      this.setState({ svgNeedsUpdating: false, svgSizeCSS });
+      this.setState({ svgSizeCSS });
     }
   }
 
@@ -65,12 +65,23 @@ class App extends Component {
       <div className='main h-100'>
         <svg
           id='image'
-          //key={this.state.svgNeedsUpdating}
           style={this.state.svgSizeCSS}
-          viewBox={`0 0 ${this.state.svgW} ${this.state.svgH}`}
+          viewBox={`0 0 ${this.state.options.width} ${this.state.options.height}`}
           ref={this.generateSVG.bind(this)}
         />
         <Form className='controls-container'>
+          <FormGroup>
+            <Label className='input-group-label' for='seed'>Seed:</Label>
+            <Input
+              id='seed'
+              className='input-inline-small'
+              bsSize='sm'
+              type='number'
+              step='1'
+              defaultValue={this.state.options.seed}
+              onChange={this.updateOptions.bind(this)}
+            />
+          </FormGroup>
           <FormGroup>
             <Label className='input-group-label' for='resolution'>Resolution:</Label>
             <Input
@@ -81,7 +92,7 @@ class App extends Component {
               step='1'
               min='0'
               max='8192'
-              defaultValue={this.state.svgW}
+              defaultValue={this.state.options.width}
               onChange={this.updateOptions.bind(this)}
             />
             &nbsp;x&nbsp;
@@ -93,7 +104,7 @@ class App extends Component {
               step='1'
               min='0'
               max='8192'
-              defaultValue={this.state.svgH}
+              defaultValue={this.state.options.height}
               onChange={this.updateOptions.bind(this)}
             />
           </FormGroup>
