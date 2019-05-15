@@ -1,6 +1,7 @@
 // triangulator2-app
 // Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { Form, FormGroup, Label, Input } from 'reactstrap';
 import Triangulator from 'triangulator2';
@@ -37,31 +38,32 @@ class App extends Component {
       seed: true,
       width: true,
       height: true,
+      cellSize: true,
     };
   }
 
-  // Only start processing input changes after the user hasn't typed for a second
-  // Otherwise typing numbers causes lag after every keystroke
-  handleNumberInputChange(event) {
-    if (this.timers[event.target.id]) {
-      clearTimeout(this.timers[event.target.id]);
-      event.persist();
-      this.timers[event.target.id] = setTimeout(() => this.updateOptions(event), 1000);
-    }
+  // Wrap _.debounce
+  inputHandler(wait) {
+    return (event) => {
+      const { target } = event;
+      _.debounce(this.handleOptionChange, wait).bind(this)(target.id, target.value);
+    };
   }
 
   // This handle input changes from non-text inputs
-  updateOptions(event) {
+  handleOptionChange(id, value) {
+    console.log('change')
     const updatedState = { svgNeedsUpdating: true, options: this.state.options };
-    updatedState.options[event.target.id] = parseInt(event.target.value, 10);
+    updatedState.options[id] = parseInt(value, 10);
     this.setState(updatedState);
   }
 
   async generateSVG(element) {
     const { svgNeedsUpdating, options } = this.state;
-    if (svgNeedsUpdating) { // If update flag is set, unset it before anything else
+    // TODO: sometimes element is null, iont know wtf is goin on here
+    if (svgNeedsUpdating && element) {
+      // If update flag is set, unset it before anything else
       await this.setState({ svgNeedsUpdating: false });
-      console.log(`update${JSON.stringify(options)}`);
       const svgString = Triangulator.generate({
         svgInput: element,
         forceSVGSize: false,
@@ -95,7 +97,7 @@ class App extends Component {
               type='number'
               step='1'
               defaultValue={this.state.options.seed}
-              onChange={this.handleNumberInputChange.bind(this)}
+              onChange={this.inputHandler(500)}
             />
           </FormGroup>
           <FormGroup>
@@ -108,7 +110,7 @@ class App extends Component {
               min='0'
               max='8192'
               defaultValue={this.state.options.width}
-              onChange={this.handleNumberInputChange.bind(this)}
+              onChange={this.inputHandler(500)}
             />
             &nbsp;x&nbsp;
             <Input
@@ -119,20 +121,19 @@ class App extends Component {
               min='0'
               max='8192'
               defaultValue={this.state.options.height}
-              onChange={this.handleNumberInputChange.bind(this)}
+              onChange={this.inputHandler(500)}
             />
           </FormGroup>
           <FormGroup>
             <Label className='input-group-label' for='cellSize'>Cell Size:</Label>
-            <Input
-              id='cellSize'
-              bsSize='sm'
-              type='number'
-              step='1'
-              min='80'
-              max='512'
+            <input
+              id="cellSize"
+              type="range"
+              step="1"
+              min="80"
+              max="512"
               defaultValue={this.state.options.cellSize}
-              onChange={this.handleNumberInputChange.bind(this)}
+              onChange={this.inputHandler(100)}
             />
           </FormGroup>
         </Form>
