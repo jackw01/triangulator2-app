@@ -32,10 +32,26 @@ class App extends Component {
         strokeWidth: 1,
       },
     };
+
+    this.timers = {
+      seed: true,
+      width: true,
+      height: true,
+    };
   }
 
+  // Only start processing input changes after the user hasn't typed for a second
+  // Otherwise typing numbers causes lag after every keystroke
+  handleNumberInputChange(event) {
+    if (this.timers[event.target.id]) {
+      clearTimeout(this.timers[event.target.id]);
+      event.persist();
+      this.timers[event.target.id] = setTimeout(() => this.updateOptions(event), 1000);
+    }
+  }
+
+  // This handle input changes from non-text inputs
   updateOptions(event) {
-    console.log(event.target);
     const updatedState = { svgNeedsUpdating: true, options: this.state.options };
     updatedState.options[event.target.id] = parseInt(event.target.value, 10);
     this.setState(updatedState);
@@ -43,14 +59,15 @@ class App extends Component {
 
   async generateSVG(element) {
     const { svgNeedsUpdating, options } = this.state;
-    if (svgNeedsUpdating) {
+    if (svgNeedsUpdating) { // If update flag is set, unset it before anything else
       await this.setState({ svgNeedsUpdating: false });
+      console.log(`update${JSON.stringify(options)}`);
       const svgString = Triangulator.generate({
         svgInput: element,
         forceSVGSize: false,
         ...options,
       });
-
+      // Determine correct css sizing based on image and browser aspect ratios
       const windowAspect = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
         / Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
       const svgSizeCSS = { width: '', height: '' };
@@ -74,38 +91,48 @@ class App extends Component {
             <Label className='input-group-label' for='seed'>Seed:</Label>
             <Input
               id='seed'
-              className='input-inline-small'
               bsSize='sm'
               type='number'
               step='1'
               defaultValue={this.state.options.seed}
-              onChange={this.updateOptions.bind(this)}
+              onChange={this.handleNumberInputChange.bind(this)}
             />
           </FormGroup>
           <FormGroup>
             <Label className='input-group-label' for='resolution'>Resolution:</Label>
             <Input
-              id='svgW'
-              className='input-inline-small'
+              id='width'
               bsSize='sm'
               type='number'
               step='1'
               min='0'
               max='8192'
               defaultValue={this.state.options.width}
-              onChange={this.updateOptions.bind(this)}
+              onChange={this.handleNumberInputChange.bind(this)}
             />
             &nbsp;x&nbsp;
             <Input
-              id='svgH'
-              className='input-inline-small'
+              id='height'
               bsSize='sm'
               type='number'
               step='1'
               min='0'
               max='8192'
               defaultValue={this.state.options.height}
-              onChange={this.updateOptions.bind(this)}
+              onChange={this.handleNumberInputChange.bind(this)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label className='input-group-label' for='cellSize'>Cell Size:</Label>
+            <Input
+              id='cellSize'
+              bsSize='sm'
+              type='number'
+              step='1'
+              min='80'
+              max='512'
+              defaultValue={this.state.options.cellSize}
+              onChange={this.handleNumberInputChange.bind(this)}
             />
           </FormGroup>
         </Form>
