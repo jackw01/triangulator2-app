@@ -3,7 +3,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { Form, FormGroup, Label, Input } from 'reactstrap';
+import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import Triangulator from 'triangulator2';
 
 class App extends Component {
@@ -12,6 +12,8 @@ class App extends Component {
     this.state = {
       svgNeedsUpdating: true,
       svgSizeCSS: { width: '', height: '' },
+      svgWidth: 3840,
+      svgHeight: 2400,
       options: {
         seed: 4,
         width: 3840,
@@ -33,29 +35,35 @@ class App extends Component {
         strokeWidth: 1,
       },
     };
-  }
 
-  // Wrap _.throttle
-  inputHandler(wait) {
-    return (event) => {
-      const { target } = event;
-      _.throttle(this.handleOptionChange, wait).bind(this)(target.id, target.value);
-    };
+    // Debounce input changes
+    this.inputHandler = _.debounce(this.handleOptionChange, 150).bind(this);
   }
 
   // This handle input changes from non-text inputs
-  handleOptionChange(id, value) {
+  handleOptionChange(target) {
+    console.log('change ' + target.id);
     const updatedState = { svgNeedsUpdating: true, options: this.state.options };
-    updatedState.options[id] = parseInt(value, 10);
+    if (target.step === 1) updatedState.options[target.id] = parseInt(target.value, 10);
+    else updatedState.options[target.id] = parseFloat(target.value);
     this.setState(updatedState);
+  }
+
+  forceRegenerate() {
+    console.log('force');
+    this.forceUpdate();
   }
 
   async generateSVG(element) {
     const { svgNeedsUpdating, options } = this.state;
     // TODO: sometimes element is null, iont know wtf is goin on here
     if (svgNeedsUpdating && element) {
+      console.log('update');
+      console.log(options);
+
       // If update flag is set, unset it before anything else
       await this.setState({ svgNeedsUpdating: false });
+      element.innerHTML = ''
       const svgString = Triangulator.generate({
         svgInput: element,
         forceSVGSize: false,
@@ -67,7 +75,7 @@ class App extends Component {
       const svgSizeCSS = { width: '', height: '' };
       if ((options.width / options.height) > windowAspect) svgSizeCSS.width = '100%';
       else svgSizeCSS.height = '100%';
-      this.setState({ svgSizeCSS });
+      this.setState({ svgSizeCSS, svgWidth: options.width, svgHeight: options.height });
     }
   }
 
@@ -77,7 +85,7 @@ class App extends Component {
         <svg
           id='image'
           style={this.state.svgSizeCSS}
-          viewBox={`0 0 ${this.state.options.width} ${this.state.options.height}`}
+          viewBox={`0 0 ${this.state.svgWidth} ${this.state.svgHeight}`}
           ref={this.generateSVG.bind(this)}
         />
         <Form className='controls-container'>
@@ -89,7 +97,7 @@ class App extends Component {
               type='number'
               step='1'
               defaultValue={this.state.options.seed}
-              onChange={this.inputHandler(500)}
+              onChange={e => this.inputHandler(e.target)}
             />
           </FormGroup>
           <FormGroup>
@@ -102,7 +110,7 @@ class App extends Component {
               min='0'
               max='8192'
               defaultValue={this.state.options.width}
-              onChange={this.inputHandler(500)}
+              onChange={e => this.inputHandler(e.target)}
             />
             &nbsp;x&nbsp;
             <Input
@@ -113,20 +121,55 @@ class App extends Component {
               min='0'
               max='8192'
               defaultValue={this.state.options.height}
-              onChange={this.inputHandler(500)}
+              onChange={e => this.inputHandler(e.target)}
             />
+          </FormGroup>
+          <FormGroup>
+            <Label className='input-group-label' for='gridMode'>Grid Mode:</Label>
+            <Input
+              id='gridMode'
+              type='select'
+              defaultValue='1'
+              onChange={e => this.handleOptionChange(e.target)}
+            >
+              <option value='1'>Square</option>
+              <option value='2'>Triangle</option>
+              <option value='3'>Poisson</option>
+              <option value='4'>Override</option>
+            </Input>
+
           </FormGroup>
           <FormGroup>
             <Label className='input-group-label' for='cellSize'>Cell Size:</Label>
             <input
-              id="cellSize"
-              type="range"
-              step="1"
-              min="80"
-              max="512"
+              id='cellSize'
+              type='range'
+              step='1'
+              min='80'
+              max='512'
               defaultValue={this.state.options.cellSize}
-              onChange={this.inputHandler(100)}
+              onChange={e => this.inputHandler(e.target)}
             />
+          </FormGroup>
+          <FormGroup>
+            <Label className='input-group-label' for='cellRandomness'>Cell Randomness:</Label>
+            <input
+              id='cellRandomness'
+              type='range'
+              step='0.001'
+              min='0'
+              max='1'
+              defaultValue={this.state.options.cellRandomness}
+              onChange={e => this.inputHandler(e.target)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Button
+              color='secondary'
+              onClick={this.forceRegenerate.bind(this)}
+            >
+              Regenerate Points
+            </Button>
           </FormGroup>
         </Form>
       </div>
