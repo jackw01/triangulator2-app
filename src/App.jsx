@@ -33,26 +33,18 @@ class App extends Component {
         strokeWidth: 1,
       },
     };
-
-    this.timers = {
-      seed: true,
-      width: true,
-      height: true,
-      cellSize: true,
-    };
   }
 
-  // Wrap _.debounce
+  // Wrap _.throttle
   inputHandler(wait) {
     return (event) => {
       const { target } = event;
-      _.debounce(this.handleOptionChange, wait).bind(this)(target.id, target.value);
+      _.throttle(this.handleOptionChange, wait).bind(this)(target.id, target.value);
     };
   }
 
   // This handle input changes from non-text inputs
   handleOptionChange(id, value) {
-    console.log('change')
     const updatedState = { svgNeedsUpdating: true, options: this.state.options };
     updatedState.options[id] = parseInt(value, 10);
     this.setState(updatedState);
