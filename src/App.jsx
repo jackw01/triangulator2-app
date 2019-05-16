@@ -3,7 +3,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
+import { Form, FormGroup, Label, Input, ButtonGroup, Button } from 'reactstrap';
 import Triangulator from 'triangulator2';
 
 class App extends Component {
@@ -47,6 +47,16 @@ class App extends Component {
     if (target.step === 1) updatedState.options[target.id] = parseInt(target.value, 10);
     else updatedState.options[target.id] = parseFloat(target.value);
     this.setState(updatedState);
+  }
+
+  // Curried handler for toggle button inputs
+  handleToggle(value) {
+    return (event) => {
+      console.log(event.target);
+      const updatedState = { svgNeedsUpdating: true, options: this.state.options };
+      updatedState.options[event.target.id] = value;
+      this.setState(updatedState);
+    };
   }
 
   forceRegenerate() {
@@ -129,7 +139,7 @@ class App extends Component {
             <Input
               id='gridMode'
               type='select'
-              defaultValue='1'
+              defaultValue={this.state.options.gridMode}
               onChange={e => this.handleOptionChange(e.target)}
             >
               <option value='1'>Square</option>
@@ -162,6 +172,51 @@ class App extends Component {
               defaultValue={this.state.options.cellRandomness}
               onChange={e => this.inputHandler(e.target)}
             />
+          </FormGroup>
+          <FormGroup>
+            <Label className='input-group-label' for='colorRandomness'>Color Randomness:</Label>
+            <input
+              id='colorRandomness'
+              type='range'
+              step='0.001'
+              min='0'
+              max='1'
+              defaultValue={this.state.options.colorRandomness}
+              onChange={e => this.inputHandler(e.target)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label className='input-group-label' for='quantizeSteps'>Color Quantization Levels:</Label>
+            <input
+              id='quantizeSteps'
+              type='range'
+              step='1'
+              min='0'
+              max='10'
+              defaultValue={this.state.options.quantizeSteps}
+              onChange={e => this.inputHandler(e.target)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label className='input-group-label' for='gradients'>Generate Gradients:</Label>
+            <ButtonGroup>
+              <Button
+                color='secondary'
+                id='useGradient'
+                onClick={this.handleToggle(true).bind(this)}
+                active={this.state.options.useGradient}
+              >
+                On
+              </Button>
+              <Button
+                color='secondary'
+                id='useGradient'
+                onClick={this.handleToggle(false).bind(this)}
+                active={!this.state.options.useGradient}
+              >
+                Off
+              </Button>
+            </ButtonGroup>
           </FormGroup>
           <FormGroup>
             <Button
