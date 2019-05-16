@@ -24,6 +24,7 @@ class App extends Component {
         cellRandomness: 0.2,
         colorOverride: false,
         color: Triangulator.ColorFunction.RadialFromBottom,
+        colorScaleInvert: false,
         colorPalette: ['#e7a71d', '#dc433e', '#9e084b', '#41062f'],
         colorRandomness: 0.15,
         quantizeSteps: 0,
@@ -36,6 +37,8 @@ class App extends Component {
       },
     };
 
+    this.allColorFunctions = [...Object.entries(Triangulator.ColorFunction).map(i => i[1])];
+
     // Debounce input changes
     this.inputHandler = _.debounce(this.handleOptionChange, 150).bind(this);
   }
@@ -44,8 +47,16 @@ class App extends Component {
   handleOptionChange(target) {
     console.log('change ' + target.id);
     const updatedState = { svgNeedsUpdating: true, options: this.state.options };
-    if (target.step === 1) updatedState.options[target.id] = parseInt(target.value, 10);
-    else updatedState.options[target.id] = parseFloat(target.value);
+
+    if (target.id === 'color') {
+      updatedState.options[target.id] = this.allColorFunctions[parseInt(target.value, 10)];
+    } else if (target.id === 'gradient') {
+
+    } else {
+      if (target.step === 1) updatedState.options[target.id] = parseInt(target.value, 10);
+      else updatedState.options[target.id] = parseFloat(target.value);
+    }
+
     this.setState(updatedState);
   }
 
@@ -138,6 +149,7 @@ class App extends Component {
             <Label className='input-group-label' for='gridMode'>Grid Mode:</Label>
             <Input
               id='gridMode'
+              bsSize='sm'
               type='select'
               defaultValue={this.state.options.gridMode}
               onChange={e => this.handleOptionChange(e.target)}
@@ -147,7 +159,6 @@ class App extends Component {
               <option value='3'>Poisson</option>
               <option value='4'>Override</option>
             </Input>
-
           </FormGroup>
           <FormGroup>
             <Label className='input-group-label' for='cellSize'>Cell Size:</Label>
@@ -174,6 +185,41 @@ class App extends Component {
             />
           </FormGroup>
           <FormGroup>
+            <Label className='input-group-label' for='color'>Color Mode:</Label>
+            <Input
+              id='color'
+              bsSize='sm'
+              type='select'
+              defaultValue={5}
+              onChange={e => this.handleOptionChange(e.target)}
+            >
+              {this.allColorFunctions.map((f, i) => {
+                return (
+                  <option value={i}>{f.name}</option>
+                );
+              })}
+            </Input>
+            <br />
+            <ButtonGroup size='sm'>
+              <Button
+                id='colorScaleInvert'
+                color='secondary'
+                onClick={this.handleToggle(false).bind(this)}
+                active={!this.state.options.colorScaleInvert}
+              >
+                Default
+              </Button>
+              <Button
+                id='colorScaleInvert'
+                color='secondary'
+                onClick={this.handleToggle(true).bind(this)}
+                active={this.state.options.colorScaleInvert}
+              >
+                Invert
+              </Button>
+            </ButtonGroup>
+          </FormGroup>
+          <FormGroup>
             <Label className='input-group-label' for='colorRandomness'>Color Randomness:</Label>
             <input
               id='colorRandomness'
@@ -198,25 +244,49 @@ class App extends Component {
             />
           </FormGroup>
           <FormGroup>
-            <Label className='input-group-label' for='gradients'>Generate Gradients:</Label>
-            <ButtonGroup>
+            <Label className='input-group-label' for='useGradient'>Generate Gradients:</Label>
+            <ButtonGroup size='sm'>
               <Button
-                color='secondary'
                 id='useGradient'
+                color='secondary'
                 onClick={this.handleToggle(true).bind(this)}
                 active={this.state.options.useGradient}
               >
                 On
               </Button>
               <Button
-                color='secondary'
                 id='useGradient'
+                color='secondary'
                 onClick={this.handleToggle(false).bind(this)}
                 active={!this.state.options.useGradient}
               >
                 Off
               </Button>
             </ButtonGroup>
+          </FormGroup>
+          <FormGroup className={this.state.options.useGradient ? '' : 'hidden'}>
+            <Label className='input-group-label' for='gradientNegativeFactor'>Gradient Negative Factor:</Label>
+            <input
+              id='gradientNegativeFactor'
+              type='range'
+              step='0.001'
+              min='0'
+              max='0.1'
+              defaultValue={this.state.options.gradientNegativeFactor}
+              onChange={e => this.inputHandler(e.target)}
+            />
+          </FormGroup>
+          <FormGroup className={this.state.options.useGradient ? '' : 'hidden'}>
+            <Label className='input-group-label' for='gradientPositiveFactor'>Gradient Positive Factor:</Label>
+            <input
+              id='gradientPositiveFactor'
+              type='range'
+              step='0.001'
+              min='0'
+              max='0.1'
+              defaultValue={this.state.options.gradientPositiveFactor}
+              onChange={e => this.inputHandler(e.target)}
+            />
           </FormGroup>
           <FormGroup>
             <Button

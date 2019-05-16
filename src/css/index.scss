@@ -53,12 +53,14 @@ code {
 
 .controls-container {
   position: fixed;
+  display: block;
   right: 0px;
   top: 0px;
+  height: 100vh;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  overflow-y: auto !important;
+  overflow-y: scroll !important;
   padding: 0.5rem 0.6rem;
   background: rgba(0, 0, 0, 0.2);
   z-index: 100;
@@ -73,4 +75,8 @@ code {
 .controls-container input {
   width: 6rem;
   display: inline;
+}
+
+.hidden {
+  display: none;
 }
