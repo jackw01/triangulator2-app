@@ -239,7 +239,7 @@ class App extends Component {
               onChange={e => this.inputHandler(e.target)}
             />
           </FormGroup>
-          <FormGroup>
+          <FormGroup className='color-picker-container'>
             <Label className='input-group-label' for='colorPalette'>Color Palette:</Label>
             {this.state.options.colorPalette.map((hex, i) => (
               <ChromePicker

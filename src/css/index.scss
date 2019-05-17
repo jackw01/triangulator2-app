@@ -80,3 +80,45 @@ code {
 .hidden {
   display: none;
 }
+
+.color-picker-container .chrome-picker:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.chrome-picker {
+  background: $background-1 !important;
+  color: $foreground-1 !important;
+  border-radius: $border-radius !important;
+
+  svg {
+    background: $gray-700 !important;
+    fill: $foreground-1 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 0 rgba(0, 0, 0, .15) !important;
+    border-radius: $border-radius !important;
+
+    &:hover {
+      background: $gray-800 !important;
+      fill: $foreground-1 !important;
+      box-shadow: inset 0 1px 0 rgba(0, 0, 0, .4), 0 1px 0 rgba(255, 255, 255, .25) !important;
+    }
+  }
+
+  input {
+    background: $input-bg !important;
+    color: $input-color !important;
+    box-shadow: $input-box-shadow !important;
+    border-radius: $border-radius !important;
+  }
+
+  .hue-horizontal>div>div {
+    background: $gray-200 !important;
+  }
+
+  >div:last-child {
+    padding: 10px 12px 10px !important;
+
+    >div:last-child {
+      padding-top: 10px !important;
+    }
+  }
+}
