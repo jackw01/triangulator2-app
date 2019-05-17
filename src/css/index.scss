@@ -81,8 +81,14 @@ code {
   display: none;
 }
 
-.color-picker-container .chrome-picker:not(:last-child) {
-  margin-bottom: 1rem;
+.color-picker-container {
+  .chrome-picker {
+    margin-top: 1rem;
+  }
+
+  .chrome-picker ~ .chrome-picker:not(:last-child) {
+    margin-bottom: 1rem;
+  }
 }
 
 .chrome-picker {

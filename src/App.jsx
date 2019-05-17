@@ -5,6 +5,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { Form, FormGroup, Label, Input, ButtonGroup, Button } from 'reactstrap';
 import { ChromePicker } from 'react-color';
+import chroma from 'chroma-js';
 import Triangulator from 'triangulator2';
 
 class App extends Component {
@@ -67,6 +68,19 @@ class App extends Component {
       const updatedState = { svgNeedsUpdating: true, options: this.state.options };
       updatedState.options[event.target.id] = value;
       this.setState(updatedState);
+    };
+  }
+
+  // Curried handler for adding and removing color stops
+  handleChangeColorStops(delta) {
+    return () => {
+      const newSize = this.state.options.colorPalette.length + delta;
+      if (newSize > 0 && newSize <= 20) {
+        const updatedState = { svgNeedsUpdating: true, options: this.state.options };
+        updatedState.options.colorPalette = chroma.scale(this.state.options.colorPalette)
+          .mode('lch').colors(newSize);
+        this.setState(updatedState);
+      }
     };
   }
 
@@ -241,6 +255,23 @@ class App extends Component {
           </FormGroup>
           <FormGroup className='color-picker-container'>
             <Label className='input-group-label' for='colorPalette'>Color Palette:</Label>
+            <Button
+              id='colorPaletteDecrease'
+              size='sm'
+              color='secondary'
+              onClick={this.handleChangeColorStops(-1).bind(this)}
+            >
+              Remove Color Stop
+            </Button>
+            &nbsp;
+            <Button
+              id='colorPaletteIncrease'
+              size='sm'
+              color='secondary'
+              onClick={this.handleChangeColorStops(1).bind(this)}
+            >
+              Add Color Stop
+            </Button>
             {this.state.options.colorPalette.map((hex, i) => (
               <ChromePicker
                 color={hex}

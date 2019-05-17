@@ -1,5 +1,6 @@
 dependencies:
   bootstrap: 4.3.1
+  chroma-js: 2.0.3
   lodash: 4.17.11
   node-sass: 4.12.0
   react: 16.8.6
@@ -11699,6 +11700,7 @@ packages:
     version: 1.0.0
 specifiers:
   bootstrap: ^4.3.1
+  chroma-js: ^2.0.3
   eslint: ^5.8.0
   eslint-config-airbnb: ^17.1.0
   eslint-import-resolver-node: ^0.3.2
