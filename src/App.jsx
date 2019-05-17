@@ -4,6 +4,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { Form, FormGroup, Label, Input, ButtonGroup, Button } from 'reactstrap';
+import { SketchPicker } from 'react-color';
 import Triangulator from 'triangulator2';
 
 class App extends Component {
@@ -38,6 +39,7 @@ class App extends Component {
     };
 
     this.allColorFunctions = [...Object.entries(Triangulator.ColorFunction).map(i => i[1])];
+    this.allGradientFunctions = [...Object.entries(Triangulator.GradientFunction).map(i => i[1])];
 
     // Debounce input changes
     this.inputHandler = _.debounce(this.handleOptionChange, 150).bind(this);
@@ -45,17 +47,15 @@ class App extends Component {
 
   // This handle input changes from non-text inputs
   handleOptionChange(target) {
-    console.log('change ' + target.id);
+    console.log(`change ${target.id}`);
     const updatedState = { svgNeedsUpdating: true, options: this.state.options };
 
     if (target.id === 'color') {
       updatedState.options[target.id] = this.allColorFunctions[parseInt(target.value, 10)];
     } else if (target.id === 'gradient') {
-
-    } else {
-      if (target.step === 1) updatedState.options[target.id] = parseInt(target.value, 10);
-      else updatedState.options[target.id] = parseFloat(target.value);
-    }
+      updatedState.options[target.id] = this.allGradientFunctions[parseInt(target.value, 10)];
+    } else if (target.step === 1) updatedState.options[target.id] = parseInt(target.value, 10);
+    else updatedState.options[target.id] = parseFloat(target.value);
 
     this.setState(updatedState);
   }
@@ -67,6 +67,13 @@ class App extends Component {
       const updatedState = { svgNeedsUpdating: true, options: this.state.options };
       updatedState.options[event.target.id] = value;
       this.setState(updatedState);
+    };
+  }
+
+  // Curried handler for color inputs
+  handleColorChange(i) {
+    return (color) => {
+      console.log(color, i);
     };
   }
 
@@ -84,7 +91,7 @@ class App extends Component {
 
       // If update flag is set, unset it before anything else
       await this.setState({ svgNeedsUpdating: false });
-      element.innerHTML = ''
+      element.innerHTML = '';
       const svgString = Triangulator.generate({
         svgInput: element,
         forceSVGSize: false,
@@ -193,11 +200,9 @@ class App extends Component {
               defaultValue={5}
               onChange={e => this.handleOptionChange(e.target)}
             >
-              {this.allColorFunctions.map((f, i) => {
-                return (
-                  <option value={i}>{f.name}</option>
-                );
-              })}
+              {this.allColorFunctions.map((f, i) => (
+                <option value={i}>{f.name}</option>
+              ))}
             </Input>
             <br />
             <ButtonGroup size='sm'>
@@ -232,6 +237,15 @@ class App extends Component {
             />
           </FormGroup>
           <FormGroup>
+            <Label className='input-group-label' for='colorPalette'>Color Palette:</Label>
+            {this.state.options.colorPalette.map((hex, i) => (
+              <SketchPicker
+                color={hex}
+                onChangeComplete={this.handleColorChange(i).bind(this)}
+              />
+            ))}
+          </FormGroup>
+          <FormGroup>
             <Label className='input-group-label' for='quantizeSteps'>Color Quantization Levels:</Label>
             <input
               id='quantizeSteps'
@@ -263,6 +277,20 @@ class App extends Component {
                 Off
               </Button>
             </ButtonGroup>
+          </FormGroup>
+          <FormGroup className={this.state.options.useGradient ? '' : 'hidden'}>
+            <Label className='input-group-label' for='gradient'>Gradient Mode:</Label>
+            <Input
+              id='gradient'
+              bsSize='sm'
+              type='select'
+              defaultValue={5}
+              onChange={e => this.handleOptionChange(e.target)}
+            >
+              {this.allGradientFunctions.map((f, i) => (
+                <option value={i}>{f.name}</option>
+              ))}
+            </Input>
           </FormGroup>
           <FormGroup className={this.state.options.useGradient ? '' : 'hidden'}>
             <Label className='input-group-label' for='gradientNegativeFactor'>Gradient Negative Factor:</Label>

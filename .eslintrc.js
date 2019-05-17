@@ -25,6 +25,7 @@ module.exports = {
       "object-curly-newline": 0,
       "no-console": 0,
       "jsx-quotes": 0,
-      "react/destructuring-assignment": 0
+      "react/destructuring-assignment": 0,
+      "react/no-array-index-key": 0
     }
 };
