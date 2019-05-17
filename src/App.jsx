@@ -4,7 +4,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { Form, FormGroup, Label, Input, ButtonGroup, Button } from 'reactstrap';
-import { SketchPicker } from 'react-color';
+import { ChromePicker } from 'react-color';
 import Triangulator from 'triangulator2';
 
 class App extends Component {
@@ -45,7 +45,7 @@ class App extends Component {
     this.inputHandler = _.debounce(this.handleOptionChange, 150).bind(this);
   }
 
-  // This handle input changes from non-text inputs
+  // Handle input changes from non-text inputs
   handleOptionChange(target) {
     console.log(`change ${target.id}`);
     const updatedState = { svgNeedsUpdating: true, options: this.state.options };
@@ -74,6 +74,9 @@ class App extends Component {
   handleColorChange(i) {
     return (color) => {
       console.log(color, i);
+      const updatedState = { svgNeedsUpdating: true, options: this.state.options };
+      updatedState.options.colorPalette[i] = color.hex;
+      this.setState(updatedState);
     };
   }
 
@@ -87,7 +90,6 @@ class App extends Component {
     // TODO: sometimes element is null, iont know wtf is goin on here
     if (svgNeedsUpdating && element) {
       console.log('update');
-      console.log(options);
 
       // If update flag is set, unset it before anything else
       await this.setState({ svgNeedsUpdating: false });
@@ -97,6 +99,7 @@ class App extends Component {
         forceSVGSize: false,
         ...options,
       });
+
       // Determine correct css sizing based on image and browser aspect ratios
       const windowAspect = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
         / Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -239,8 +242,9 @@ class App extends Component {
           <FormGroup>
             <Label className='input-group-label' for='colorPalette'>Color Palette:</Label>
             {this.state.options.colorPalette.map((hex, i) => (
-              <SketchPicker
+              <ChromePicker
                 color={hex}
+                disableAlpha
                 onChangeComplete={this.handleColorChange(i).bind(this)}
               />
             ))}
