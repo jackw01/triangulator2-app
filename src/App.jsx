@@ -17,6 +17,7 @@ class App extends Component {
       svgWidth: 3840,
       svgHeight: 2400,
       options: {
+        isBrowser: true,
         seed: 4,
         width: 3840,
         height: 2400,
@@ -134,10 +135,11 @@ class App extends Component {
             </Col>
             <Col xs='3' className='controls-container'>
               <Form className='controls-form'>
-                <h1>Triangulator2</h1>
-                <span>
-                  © 2019 <a href='https://jackw01.github.io'>jackw01</a>. Released under the MIT license.
-                </span>
+                <h1 className='header-light header-stylized-text'>triangulator2</h1>
+                <small>
+                  © 2019 <a href='https://jackw01.github.io'>jackw01</a>. <a href='https://github.com/jackw01/triangulator2-app'>View on Github</a>
+                </small>
+                <hr />
                 <FormGroup className='spacer-top'>
                   <Label className='input-group-label' for='seed'>Seed:</Label>
                   <Input

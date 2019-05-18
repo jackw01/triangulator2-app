@@ -6,7 +6,6 @@ dependencies:
   react: 16.8.6
   react-color: 2.17.3
   react-dom: 16.8.6
-  react-icons: 3.7.0
   react-scripts: 3.0.1
   reactstrap: 8.0.0
   triangulator2: github.com/jackw01/triangulator2/36f621fd6acd174726605a6228400555a1e7bcaf
@@ -9226,12 +9225,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-X1Y+0jR47ImDVr54Ab6V9eGk0Hnu7fVWGeHQSOXHf/C2pF9c6uy3gef8QUeuUiWlNb0i08InPSE5a/KJzNzw1Q==
-  /react-icons/3.7.0:
-    dependencies:
-      camelcase: 5.3.1
-    dev: false
-    resolution:
-      integrity: sha512-7MyPwjIhuyW0D2N3s4DEd0hGPGFf0sK+IIRKhc1FvSpZNVmnUoGvHbmAwzGJU+3my+fvihVWgwU5SDtlAri56Q==
   /react-is/16.8.6:
     resolution:
       integrity: sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
@@ -11712,7 +11705,6 @@ specifiers:
   react: ^16.8.6
   react-color: ^2.17.3
   react-dom: ^16.8.6
-  react-icons: ^3.7.0
   react-scripts: ^3.0.1
   reactstrap: ^8.0.0
   triangulator2: 'github:jackw01/triangulator2'

@@ -4,23 +4,45 @@
 @import "variables";
 @import "~bootstrap/scss/bootstrap";
 
+// Fonts
+
 body {
+  font-family: "Roboto", sans-serif;
   margin: 0;
   padding: 0;
-  font-family: "Roboto", sans-serif;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
   overflow: hidden;
+  letter-spacing: 0.25px;
+  font-weight: 400;
+  line-height: 22px;
 }
 
-code {
-  font-family: "Roboto Mono", monospace;
-  font-size: 0.8rem;
-  color: $gray-100;
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Barlow", sans-serif;
 }
+
+code, pre {
+  font-family: "Fira Code", monospace;
+}
+
+// Header styles
+
+h1.header-light {
+  font-weight: 300;
+}
+
+.header-stylized-text {
+  background-image: linear-gradient(90deg, #00a3d2 0%, #00ab9a 100%);
+  color: transparent !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+// Make scrollbars match Bootstrap style
 
 ::-webkit-scrollbar {
   width: 8px;
@@ -39,6 +61,8 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: $gray-700;
 }
+
+// Custom things for this project
 
 // Force bootstrap container to use entire screen (big margins are good but not for this)
 .container {
@@ -59,7 +83,7 @@ code {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: darken($body-bg, 4%);
+  background: $gray-darker;
 }
 
 #image {
@@ -80,6 +104,16 @@ code {
   box-shadow: -2px 0px 8px rgba(0, 0, 0, 0.4);
 }
 
+.color-picker-container {
+  .chrome-picker {
+    margin-top: 1rem;
+  }
+
+  .chrome-picker ~ .chrome-picker:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+}
+
 .spacer-top {
   margin-top: $form-group-margin-bottom;
 }
@@ -98,8 +132,10 @@ code {
   display: none;
 }
 
+// Bootstrap UI tweaks
+
 @mixin thumb {
-  background: $gray-700;
+  background: $gray-800;
   box-shadow: $btn-box-shadow;
   border: none;
   outline: none;
@@ -157,7 +193,7 @@ input[type="range"] {
 }
 
 select {
-  background-color: $gray-700 !important;
+  background-color: $gray-800 !important;
   box-shadow: $btn-box-shadow !important;
   transition: all 0.15s ease-in-out !important;
 
@@ -176,16 +212,7 @@ select {
   }
 }
 
-.color-picker-container {
-  .chrome-picker {
-    margin-top: 1rem;
-  }
-
-  .chrome-picker ~ .chrome-picker:not(:last-child) {
-    margin-bottom: 1rem;
-  }
-}
-
+// react-color
 .chrome-picker {
   background: $background-1 !important;
   color: $foreground-1 !important;
@@ -195,7 +222,7 @@ select {
   svg {
     width: 20px !important;
     margin-right: 4px !important;
-    background: $gray-700 !important;
+    background: $gray-800 !important;
     fill: $foreground-1 !important;
     box-shadow: $btn-box-shadow !important;
     border-radius: $border-radius !important;

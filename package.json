@@ -6,6 +6,16 @@
     "build": "react-scripts start",
     "test": "react-scripts test"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jackw01/triangulator2-app.git"
+  },
+  "author": "jackw01",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jackw01/triangulator2-app/issues"
+  },
+  "homepage": "https://github.com/jackw01/triangulator2-app#readme",
   "dependencies": {
     "bootstrap": "^4.3.1",
     "chroma-js": "^2.0.3",
@@ -14,7 +24,6 @@
     "react": "^16.8.6",
     "react-color": "^2.17.3",
     "react-dom": "^16.8.6",
-    "react-icons": "^3.7.0",
     "react-scripts": "^3.0.1",
     "reactstrap": "^8.0.0",
     "triangulator2": "github:jackw01/triangulator2"
