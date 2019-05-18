@@ -111,7 +111,7 @@ class App extends Component {
 
       // Determine correct css sizing based on image and browser aspect ratios
       const windowAspect = document.getElementById('image-container').clientWidth
-        / Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        / document.getElementById('image-container').clientHeight;
       const svgSizeCSS = { width: '', height: '' };
       if ((options.width / options.height) > windowAspect) svgSizeCSS.width = '100%';
       else svgSizeCSS.height = '100%';
@@ -124,7 +124,7 @@ class App extends Component {
       <div className='main h-100'>
         <Container>
           <Row className='h-100'>
-            <Col xs='9' id='image-container'>
+            <Col xs='9' className='image-container' id='image-container'>
               <svg
                 id='image'
                 style={this.state.svgSizeCSS}
@@ -132,8 +132,8 @@ class App extends Component {
                 ref={this.generateSVG.bind(this)}
                />
             </Col>
-            <Col xs='3'>
-              <Form className='controls-container'>
+            <Col xs='3' className='controls-container'>
+              <Form className='controls-form'>
                 <FormGroup>
                   <Label className='input-group-label' for='seed'>Seed:</Label>
                   <Input
@@ -261,7 +261,7 @@ class App extends Component {
                     color='secondary'
                     onClick={this.handleChangeColorStops(-1).bind(this)}
                   >
-                    Remove Color Stop
+                    Remove Color
                   </Button>
                   &nbsp;
                   <Button
@@ -270,7 +270,7 @@ class App extends Component {
                     color='secondary'
                     onClick={this.handleChangeColorStops(1).bind(this)}
                   >
-                    Add Color Stop
+                    Add Color
                   </Button>
                   {this.state.options.colorPalette.map((hex, i) => (
                     <ChromePicker
