@@ -26,15 +26,15 @@ $color-warning: #d08447;
 $color-danger: #f06c6f;
 
 // Bootstrap
-$gray-100: #e6e8ec;
-$gray-200: #caccd0;
-$gray-300: #afb1b4;
-$gray-400: #95979a;
-$gray-500: #7b7d80;
-$gray-600: #626467;
-$gray-700: #4b4d4f;
-$gray-800: #343639;
-$gray-900: #1f2124;
+$gray-100: #caccd0;
+$gray-200: #b3b4b8;
+$gray-300: #9c9da1;
+$gray-400: #85878a;
+$gray-500: #6f7174;
+$gray-600: #5a5c5f;
+$gray-700: #46474a;
+$gray-800: #333437;
+$gray-900: #202224;
 
 $grays: (
   "100": $gray-100,
@@ -58,7 +58,7 @@ $theme-colors: (
 );
 
 $body-bg: $gray-900;
-$body-color: $gray-200;
+$body-color: $gray-100;
 
 $yiq-contrasted-threshold: 110;
 $yiq-text-light: $foreground-1;
@@ -78,10 +78,10 @@ $btn-border-width: 0px;
 $input-bg: $gray-800;
 $input-disabled-bg: $gray-700;
 
-$input-color: $gray-200;
-$input-border-color: $gray-800;
+$input-color: $gray-100;
+$input-border-color: darken($gray-800, 2%);
 $input-border-focus: $color-accent-darker;
-$input-border-width: 0px;
+$input-border-width: 1px;
 $input-box-shadow: inset 0 1px 0 rgba(0, 0, 0, .25), 0 1px 0 rgba(255, 255, 255, .15);
 
 $card-bg: lighten($gray-900, 2%);
@@ -92,5 +92,5 @@ $modal-header-border-color: $gray-800;
 $hr-border-color: $gray-800;
 
 @mixin transition {
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
 }

@@ -130,14 +130,19 @@ class App extends Component {
                 style={this.state.svgSizeCSS}
                 viewBox={`0 0 ${this.state.svgWidth} ${this.state.svgHeight}`}
                 ref={this.generateSVG.bind(this)}
-               />
+              />
             </Col>
             <Col xs='3' className='controls-container'>
               <Form className='controls-form'>
-                <FormGroup>
+                <h1>Triangulator2</h1>
+                <span>
+                  © 2019 <a href='https://jackw01.github.io'>jackw01</a>. Released under the MIT license.
+                </span>
+                <FormGroup className='spacer-top'>
                   <Label className='input-group-label' for='seed'>Seed:</Label>
                   <Input
                     id='seed'
+                    className='w-100'
                     bsSize='sm'
                     type='number'
                     step='1'
@@ -221,8 +226,7 @@ class App extends Component {
                       <option value={i}>{f.name}</option>
                     ))}
                   </Input>
-                  <br />
-                  <ButtonGroup size='sm'>
+                  <ButtonGroup size='sm' className='spacer-top'>
                     <Button
                       id='colorScaleInvert'
                       color='secondary'

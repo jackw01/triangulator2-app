@@ -80,6 +80,10 @@ code {
   box-shadow: -2px 0px 8px rgba(0, 0, 0, 0.4);
 }
 
+.spacer-top {
+  margin-top: $form-group-margin-bottom;
+}
+
 .input-group-label {
   display: block;
   font-size: 0.85rem;
@@ -99,8 +103,6 @@ code {
   box-shadow: $btn-box-shadow;
   border: none;
   outline: none;
-  -moz-appearance:none !important;
-  -webkit-appearance:none !important;
   width: 18px;
   height: 18px;
   border-radius: 10px;
@@ -132,16 +134,45 @@ input[type="range"] {
 
   &::-moz-range-track {
     background: transparent;
+    -moz-appearance:none !important;
   }
 
   &::-webkit-slider-thumb {
+    -webkit-appearance:none !important;
     @include thumb();
     @include transition();
   }
 
   &::-moz-range-thumb {
+    -moz-appearance:none !important;
     @include thumb();
     @include transition();
+  }
+}
+
+.btn {
+  &:hover {
+    background: $color-accent-darker !important;
+  }
+}
+
+select {
+  background-color: $gray-700 !important;
+  box-shadow: $btn-box-shadow !important;
+  transition: all 0.15s ease-in-out !important;
+
+  &:hover {
+    //background-color: darken($gray-700, 10%) !important;
+    background: $color-accent-darker !important;
+  }
+
+  &:focus {
+    border: none;
+  }
+
+  option {
+    background-color: $gray-800 !important;
+    color: $gray-100 !important;
   }
 }
 
@@ -159,6 +190,7 @@ input[type="range"] {
   background: $background-1 !important;
   color: $foreground-1 !important;
   border-radius: $border-radius !important;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4) !important;
 
   svg {
     width: 20px !important;
@@ -167,9 +199,11 @@ input[type="range"] {
     fill: $foreground-1 !important;
     box-shadow: $btn-box-shadow !important;
     border-radius: $border-radius !important;
+    @include transition();
 
     &:hover {
-      background: darken($gray-700, 10%) !important;
+      //background: darken($gray-700, 10%) !important;
+      background: $color-accent-darker !important;
       fill: $foreground-1 !important;
       box-shadow: $btn-active-box-shadow !important;
     }
@@ -180,6 +214,11 @@ input[type="range"] {
     color: $input-color !important;
     box-shadow: $input-box-shadow !important;
     border-radius: $border-radius !important;
+    @include transition();
+
+    &:focus {
+      background: lighten($input-bg, 5%) !important;
+    }
   }
 
   .saturation-white {
