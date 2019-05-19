@@ -29,6 +29,13 @@ code, pre {
   font-family: "Fira Code", monospace;
 }
 
+// Bootstrap buttons fix
+@each $color, $value in $theme-colors {
+  .btn-#{$color} {
+    @include button-variant($value, $value, $hover-background: lighten($value, $btn-input-hover-change), $hover-border: lighten($value, $btn-input-hover-change), $active-background: darken($value, 10%), $active-border: darken($value, 12.5%));
+  }
+}
+
 // Header styles
 
 h1.header-light {
@@ -102,6 +109,10 @@ h1.header-light {
   padding: 0.5rem 0.6rem;
   border-bottom-left-radius: 5px;
   box-shadow: -2px 0px 8px rgba(0, 0, 0, 0.4);
+
+  &>div:last-child {
+    padding-bottom: 0.5rem;
+  }
 }
 
 .color-picker-container {
@@ -144,7 +155,7 @@ h1.header-light {
   border-radius: 10px;
 
   &:hover {
-    background: $color-accent-darker;
+    background: lighten($gray-800, $btn-input-hover-change);
   }
 }
 
@@ -186,20 +197,13 @@ input[type="range"] {
   }
 }
 
-.btn {
-  &:hover {
-    background: $color-accent-darker !important;
-  }
-}
-
 select {
   background-color: $gray-800 !important;
   box-shadow: $btn-box-shadow !important;
   transition: all 0.15s ease-in-out !important;
 
   &:hover {
-    //background-color: darken($gray-700, 10%) !important;
-    background: $color-accent-darker !important;
+    background-color: lighten($gray-800, $btn-input-hover-change) !important;
   }
 
   &:focus {
@@ -229,10 +233,8 @@ select {
     @include transition();
 
     &:hover {
-      //background: darken($gray-700, 10%) !important;
-      background: $color-accent-darker !important;
+      background: lighten($gray-800, $btn-input-hover-change) !important;
       fill: $foreground-1 !important;
-      box-shadow: $btn-active-box-shadow !important;
     }
   }
 

@@ -6,6 +6,8 @@ import React, { Component } from 'react';
 import { Container, Row, Col, Form, FormGroup, Label, Input, ButtonGroup, Button } from 'reactstrap';
 import { ChromePicker } from 'react-color';
 import chroma from 'chroma-js';
+import canvg from 'canvg';
+import saveAs from 'file-saver';
 import Triangulator from 'triangulator2';
 
 class App extends Component {
@@ -16,6 +18,7 @@ class App extends Component {
       svgSizeCSS: { width: '', height: '' },
       svgWidth: 3840,
       svgHeight: 2400,
+      svgString: '',
       options: {
         isBrowser: true,
         seed: 4,
@@ -45,11 +48,29 @@ class App extends Component {
 
     // Debounce input changes
     this.inputHandler = _.debounce(this.handleOptionChange, 150).bind(this);
+
+    // Polyfill canvas.toBlob() used for saving images
+    // Not natively implemented on iOS
+    if (!HTMLCanvasElement.prototype.toBlob) {
+      Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+        value: (callback, type, quality) => {
+          const dataURL = this.toDataURL(type, quality).split(',')[1];
+          setTimeout(() => {
+            const binStr = atob(dataURL);
+            const len = binStr.length;
+            const arr = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+              arr[i] = binStr.charCodeAt(i);
+            }
+            callback(new Blob([arr], { type: type || 'image/png' }));
+          });
+        },
+      });
+    }
   }
 
   // Handle input changes from non-text inputs
   handleOptionChange(target) {
-    console.log(`change ${target.id}`);
     const updatedState = { svgNeedsUpdating: true, options: this.state.options };
 
     if (target.id === 'color') {
@@ -95,12 +116,11 @@ class App extends Component {
     };
   }
 
+  // Render SVG
   async generateSVG(element) {
     const { svgNeedsUpdating, options } = this.state;
     // TODO: sometimes element is null, iont know wtf is goin on here
     if (svgNeedsUpdating && element) {
-      console.log('update');
-
       // If update flag is set, unset it before anything else
       await this.setState({ svgNeedsUpdating: false });
       element.innerHTML = '';
@@ -116,252 +136,288 @@ class App extends Component {
       const svgSizeCSS = { width: '', height: '' };
       if ((options.width / options.height) > windowAspect) svgSizeCSS.width = '100%';
       else svgSizeCSS.height = '100%';
-      this.setState({ svgSizeCSS, svgWidth: options.width, svgHeight: options.height });
+      this.setState({ svgSizeCSS, svgWidth: options.width, svgHeight: options.height, svgString });
     }
+  }
+
+  // Render as image and download
+  saveImage() {
+    canvg('canvas', this.state.svgString);
+    document.getElementById('canvas').toBlob((blob) => {
+      saveAs(blob, `tri2-${new Date().toISOString()}.png`);
+    });
+  }
+
+  // Download SVG data
+  saveSVG() {
+    const blob = new Blob([this.state.svgString]);
+    saveAs(blob, `tri2-${new Date().toISOString()}.svg`);
   }
 
   render() {
     return (
-      <div className='main h-100'>
-        <Container>
-          <Row className='h-100'>
-            <Col xs='9' className='image-container' id='image-container'>
-              <svg
-                id='image'
-                style={this.state.svgSizeCSS}
-                viewBox={`0 0 ${this.state.svgWidth} ${this.state.svgHeight}`}
-                ref={this.generateSVG.bind(this)}
-              />
-            </Col>
-            <Col xs='3' className='controls-container'>
-              <Form className='controls-form'>
-                <h1 className='header-light header-stylized-text'>triangulator2</h1>
-                <small>
-                  © 2019 <a href='https://jackw01.github.io'>jackw01</a>. <a href='https://github.com/jackw01/triangulator2-app'>View on Github</a>
-                </small>
-                <hr />
-                <FormGroup className='spacer-top'>
-                  <Label className='input-group-label' for='seed'>Seed:</Label>
-                  <Input
-                    id='seed'
-                    className='w-100'
-                    bsSize='sm'
-                    type='number'
-                    step='1'
-                    defaultValue={this.state.options.seed}
-                    onChange={e => this.inputHandler(e.target)}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label className='input-group-label' for='resolution'>Resolution:</Label>
-                  <Input
-                    id='width'
-                    bsSize='sm'
-                    type='number'
-                    step='1'
-                    min='0'
-                    max='8192'
-                    defaultValue={this.state.options.width}
-                    onChange={e => this.inputHandler(e.target)}
-                  />
-                  &nbsp;x&nbsp;
-                  <Input
-                    id='height'
-                    bsSize='sm'
-                    type='number'
-                    step='1'
-                    min='0'
-                    max='8192'
-                    defaultValue={this.state.options.height}
-                    onChange={e => this.inputHandler(e.target)}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label className='input-group-label' for='gridMode'>Grid Mode:</Label>
-                  <Input
-                    id='gridMode'
-                    bsSize='sm'
-                    type='select'
-                    defaultValue={this.state.options.gridMode}
-                    onChange={e => this.handleOptionChange(e.target)}
-                  >
-                    <option value='1'>Square</option>
-                    <option value='2'>Triangle</option>
-                    <option value='3'>Poisson</option>
-                    <option value='4'>Override</option>
-                  </Input>
-                </FormGroup>
-                <FormGroup>
-                  <Label className='input-group-label' for='cellSize'>Cell Size:</Label>
-                  <input
-                    id='cellSize'
-                    type='range'
-                    step='1'
-                    min='80'
-                    max='512'
-                    defaultValue={this.state.options.cellSize}
-                    onChange={e => this.inputHandler(e.target)}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label className='input-group-label' for='cellRandomness'>Cell Randomness:</Label>
-                  <input
-                    id='cellRandomness'
-                    type='range'
-                    step='0.001'
-                    min='0'
-                    max='1'
-                    defaultValue={this.state.options.cellRandomness}
-                    onChange={e => this.inputHandler(e.target)}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label className='input-group-label' for='color'>Color Mode:</Label>
-                  <Input
-                    id='color'
-                    bsSize='sm'
-                    type='select'
-                    defaultValue={5}
-                    onChange={e => this.handleOptionChange(e.target)}
-                  >
-                    {this.allColorFunctions.map((f, i) => (
-                      <option value={i}>{f.name}</option>
-                    ))}
-                  </Input>
-                  <ButtonGroup size='sm' className='spacer-top'>
-                    <Button
-                      id='colorScaleInvert'
-                      color='secondary'
-                      onClick={this.handleToggle(false).bind(this)}
-                      active={!this.state.options.colorScaleInvert}
-                    >
-                      Default
-                    </Button>
-                    <Button
-                      id='colorScaleInvert'
-                      color='secondary'
-                      onClick={this.handleToggle(true).bind(this)}
-                      active={this.state.options.colorScaleInvert}
-                    >
-                      Invert
-                    </Button>
-                  </ButtonGroup>
-                </FormGroup>
-                <FormGroup>
-                  <Label className='input-group-label' for='colorRandomness'>Color Randomness:</Label>
-                  <input
-                    id='colorRandomness'
-                    type='range'
-                    step='0.001'
-                    min='0'
-                    max='1'
-                    defaultValue={this.state.options.colorRandomness}
-                    onChange={e => this.inputHandler(e.target)}
-                  />
-                </FormGroup>
-                <FormGroup className='color-picker-container'>
-                  <Label className='input-group-label' for='colorPalette'>Color Palette:</Label>
-                  <Button
-                    id='colorPaletteDecrease'
-                    size='sm'
-                    color='secondary'
-                    onClick={this.handleChangeColorStops(-1).bind(this)}
-                  >
-                    Remove Color
-                  </Button>
-                  &nbsp;
-                  <Button
-                    id='colorPaletteIncrease'
-                    size='sm'
-                    color='secondary'
-                    onClick={this.handleChangeColorStops(1).bind(this)}
-                  >
-                    Add Color
-                  </Button>
-                  {this.state.options.colorPalette.map((hex, i) => (
-                    <ChromePicker
-                      color={hex}
-                      disableAlpha
-                      onChangeComplete={this.handleColorChange(i).bind(this)}
-                    />
+      <Container className='main h-100'>
+        <Row className='h-100'>
+          <Col xs='9' className='image-container' id='image-container'>
+            <svg
+              id='image'
+              style={this.state.svgSizeCSS}
+              viewBox={`0 0 ${this.state.svgWidth} ${this.state.svgHeight}`}
+              ref={this.generateSVG.bind(this)}
+            />
+          </Col>
+          <Col xs='3' className='controls-container'>
+            <Form className='controls-form'>
+              <h1 className='header-light header-stylized-text'>triangulator2</h1>
+              <small>
+                © 2019 <a href='https://jackw01.github.io'>jackw01</a>. <a href='https://github.com/jackw01/triangulator2-app'>View on Github</a>
+              </small>
+              <hr />
+              <FormGroup className='spacer-top'>
+                <Label className='input-group-label' for='seed'>Seed:</Label>
+                <Input
+                  id='seed'
+                  className='w-100'
+                  bsSize='sm'
+                  type='number'
+                  step='1'
+                  defaultValue={this.state.options.seed}
+                  onChange={e => this.inputHandler(e.target)}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label className='input-group-label' for='resolution'>Resolution:</Label>
+                <Input
+                  id='width'
+                  bsSize='sm'
+                  type='number'
+                  step='1'
+                  min='0'
+                  max='8192'
+                  defaultValue={this.state.options.width}
+                  onChange={e => this.inputHandler(e.target)}
+                />
+                &nbsp;x&nbsp;
+                <Input
+                  id='height'
+                  bsSize='sm'
+                  type='number'
+                  step='1'
+                  min='0'
+                  max='8192'
+                  defaultValue={this.state.options.height}
+                  onChange={e => this.inputHandler(e.target)}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label className='input-group-label' for='gridMode'>Grid Mode:</Label>
+                <Input
+                  id='gridMode'
+                  bsSize='sm'
+                  type='select'
+                  defaultValue={this.state.options.gridMode}
+                  onChange={e => this.handleOptionChange(e.target)}
+                >
+                  <option value='1'>Square</option>
+                  <option value='2'>Triangle</option>
+                  <option value='3'>Poisson</option>
+                  <option value='4'>Override</option>
+                </Input>
+              </FormGroup>
+              <FormGroup>
+                <Label className='input-group-label' for='cellSize'>Cell Size:</Label>
+                <input
+                  id='cellSize'
+                  type='range'
+                  step='1'
+                  min='80'
+                  max='512'
+                  defaultValue={this.state.options.cellSize}
+                  onChange={e => this.inputHandler(e.target)}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label className='input-group-label' for='cellRandomness'>Cell Randomness:</Label>
+                <input
+                  id='cellRandomness'
+                  type='range'
+                  step='0.001'
+                  min='0'
+                  max='1'
+                  defaultValue={this.state.options.cellRandomness}
+                  onChange={e => this.inputHandler(e.target)}
+                />
+              </FormGroup>
+              <hr />
+              <FormGroup>
+                <Label className='input-group-label' for='color'>Color Mode:</Label>
+                <Input
+                  id='color'
+                  bsSize='sm'
+                  type='select'
+                  defaultValue={5}
+                  onChange={e => this.handleOptionChange(e.target)}
+                >
+                  {this.allColorFunctions.map((f, i) => (
+                    <option value={i}>{f.name}</option>
                   ))}
-                </FormGroup>
-                <FormGroup>
-                  <Label className='input-group-label' for='quantizeSteps'>Color Quantization Levels:</Label>
-                  <input
-                    id='quantizeSteps'
-                    type='range'
-                    step='1'
-                    min='0'
-                    max='10'
-                    defaultValue={this.state.options.quantizeSteps}
-                    onChange={e => this.inputHandler(e.target)}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label className='input-group-label' for='useGradient'>Generate Gradients:</Label>
-                  <ButtonGroup size='sm'>
-                    <Button
-                      id='useGradient'
-                      color='secondary'
-                      onClick={this.handleToggle(true).bind(this)}
-                      active={this.state.options.useGradient}
-                    >
-                      On
-                    </Button>
-                    <Button
-                      id='useGradient'
-                      color='secondary'
-                      onClick={this.handleToggle(false).bind(this)}
-                      active={!this.state.options.useGradient}
-                    >
-                      Off
-                    </Button>
-                  </ButtonGroup>
-                </FormGroup>
-                <FormGroup className={this.state.options.useGradient ? '' : 'hidden'}>
-                  <Label className='input-group-label' for='gradient'>Gradient Mode:</Label>
-                  <Input
-                    id='gradient'
-                    bsSize='sm'
-                    type='select'
-                    defaultValue={5}
-                    onChange={e => this.handleOptionChange(e.target)}
+                </Input>
+                <ButtonGroup size='sm' className='spacer-top'>
+                  <Button
+                    id='colorScaleInvert'
+                    color='secondary'
+                    onClick={this.handleToggle(false).bind(this)}
+                    active={!this.state.options.colorScaleInvert}
                   >
-                    {this.allGradientFunctions.map((f, i) => (
-                      <option value={i}>{f.name}</option>
-                    ))}
-                  </Input>
-                </FormGroup>
-                <FormGroup className={this.state.options.useGradient ? '' : 'hidden'}>
-                  <Label className='input-group-label' for='gradientNegativeFactor'>Gradient Negative Factor:</Label>
-                  <input
-                    id='gradientNegativeFactor'
-                    type='range'
-                    step='0.001'
-                    min='0'
-                    max='0.1'
-                    defaultValue={this.state.options.gradientNegativeFactor}
-                    onChange={e => this.inputHandler(e.target)}
+                    Default
+                  </Button>
+                  <Button
+                    id='colorScaleInvert'
+                    color='secondary'
+                    onClick={this.handleToggle(true).bind(this)}
+                    active={this.state.options.colorScaleInvert}
+                  >
+                    Invert
+                  </Button>
+                </ButtonGroup>
+              </FormGroup>
+              <FormGroup>
+                <Label className='input-group-label' for='colorRandomness'>Color Randomness:</Label>
+                <input
+                  id='colorRandomness'
+                  type='range'
+                  step='0.001'
+                  min='0'
+                  max='1'
+                  defaultValue={this.state.options.colorRandomness}
+                  onChange={e => this.inputHandler(e.target)}
+                />
+              </FormGroup>
+              <FormGroup className='color-picker-container'>
+                <Label className='input-group-label' for='colorPalette'>Color Palette:</Label>
+                <Button
+                  id='colorPaletteDecrease'
+                  size='sm'
+                  color='secondary'
+                  onClick={this.handleChangeColorStops(-1).bind(this)}
+                >
+                  Remove Color
+                </Button>
+                &nbsp;
+                <Button
+                  id='colorPaletteIncrease'
+                  size='sm'
+                  color='secondary'
+                  onClick={this.handleChangeColorStops(1).bind(this)}
+                >
+                  Add Color
+                </Button>
+                {this.state.options.colorPalette.map((hex, i) => (
+                  <ChromePicker
+                    color={hex}
+                    disableAlpha
+                    onChangeComplete={this.handleColorChange(i).bind(this)}
                   />
-                </FormGroup>
-                <FormGroup className={this.state.options.useGradient ? '' : 'hidden'}>
-                  <Label className='input-group-label' for='gradientPositiveFactor'>Gradient Positive Factor:</Label>
-                  <input
-                    id='gradientPositiveFactor'
-                    type='range'
-                    step='0.001'
-                    min='0'
-                    max='0.1'
-                    defaultValue={this.state.options.gradientPositiveFactor}
-                    onChange={e => this.inputHandler(e.target)}
-                  />
-                </FormGroup>
-              </Form>
-            </Col>
-          </Row>
-        </Container>
-      </div>
+                ))}
+              </FormGroup>
+              <FormGroup>
+                <Label className='input-group-label' for='quantizeSteps'>Color Quantization Levels:</Label>
+                <input
+                  id='quantizeSteps'
+                  type='range'
+                  step='1'
+                  min='0'
+                  max='10'
+                  defaultValue={this.state.options.quantizeSteps}
+                  onChange={e => this.inputHandler(e.target)}
+                />
+              </FormGroup>
+              <hr />
+              <FormGroup>
+                <Label className='input-group-label' for='useGradient'>Generate Gradients:</Label>
+                <ButtonGroup size='sm'>
+                  <Button
+                    id='useGradient'
+                    color='secondary'
+                    onClick={this.handleToggle(true).bind(this)}
+                    active={this.state.options.useGradient}
+                  >
+                    On
+                  </Button>
+                  <Button
+                    id='useGradient'
+                    color='secondary'
+                    onClick={this.handleToggle(false).bind(this)}
+                    active={!this.state.options.useGradient}
+                  >
+                    Off
+                  </Button>
+                </ButtonGroup>
+              </FormGroup>
+              <FormGroup className={this.state.options.useGradient ? '' : 'hidden'}>
+                <Label className='input-group-label' for='gradient'>Gradient Mode:</Label>
+                <Input
+                  id='gradient'
+                  bsSize='sm'
+                  type='select'
+                  defaultValue={5}
+                  onChange={e => this.handleOptionChange(e.target)}
+                >
+                  {this.allGradientFunctions.map((f, i) => (
+                    <option value={i}>{f.name}</option>
+                  ))}
+                </Input>
+              </FormGroup>
+              <FormGroup className={this.state.options.useGradient ? '' : 'hidden'}>
+                <Label className='input-group-label' for='gradientNegativeFactor'>Gradient Negative Factor:</Label>
+                <input
+                  id='gradientNegativeFactor'
+                  type='range'
+                  step='0.001'
+                  min='0'
+                  max='0.1'
+                  defaultValue={this.state.options.gradientNegativeFactor}
+                  onChange={e => this.inputHandler(e.target)}
+                />
+              </FormGroup>
+              <FormGroup className={this.state.options.useGradient ? '' : 'hidden'}>
+                <Label className='input-group-label' for='gradientPositiveFactor'>Gradient Positive Factor:</Label>
+                <input
+                  id='gradientPositiveFactor'
+                  type='range'
+                  step='0.001'
+                  min='0'
+                  max='0.1'
+                  defaultValue={this.state.options.gradientPositiveFactor}
+                  onChange={e => this.inputHandler(e.target)}
+                />
+              </FormGroup>
+              <hr />
+              <FormGroup className='color-picker-container'>
+                <Button
+                  color='primary'
+                  onClick={this.saveImage.bind(this)}
+                >
+                  Save Image
+                </Button>
+                &nbsp;
+                <Button
+                  color='secondary'
+                  onClick={this.saveSVG.bind(this)}
+                >
+                  Save SVG
+                </Button>
+              </FormGroup>
+            </Form>
+          </Col>
+        </Row>
+        <canvas
+          id='canvas'
+          className='hidden'
+          width={this.state.svgWidth}
+          height={this.state.svgHeight}
+        />
+      </Container>
     );
   }
 }

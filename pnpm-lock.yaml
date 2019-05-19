@@ -1,6 +1,8 @@
 dependencies:
   bootstrap: 4.3.1
+  canvg: 2.0.0
   chroma-js: 2.0.3
+  file-saver: 2.0.2
   lodash: 4.17.11
   node-sass: 4.12.0
   react: 16.8.6
@@ -3041,6 +3043,17 @@ packages:
     dev: false
     resolution:
       integrity: sha512-rUBIbap+VJfxTzrM4akJ00lkvVb5/n5v3EGXfWzSH5zT8aJmGzjA8HWhJ4U6kCpzxozUSnB+yvAYDRPY6mRpgQ==
+  /canvg/2.0.0:
+    dependencies:
+      rgbcolor: 1.0.1
+      stackblur-canvas: 2.2.0
+    dev: false
+    peerDependencies:
+      canvas: ^2.1.0
+      jsdom: ^13.0.0
+      xmldom: ^0.1.27
+    resolution:
+      integrity: sha512-PiKa+sjzzAv8HONsBaJZRhZ3eCM5uJkpFgF0rSzcamOrdXdls81ukjNxtz7JYyxucj6WpIkZwk9j7Jku0+ivqQ==
   /capture-exit/2.0.0:
     dependencies:
       rsvp: 4.8.4
@@ -4890,6 +4903,10 @@ packages:
       webpack: ^4.0.0
     resolution:
       integrity: sha512-4sNIOXgtH/9WZq4NvlfU3Opn5ynUsqBwSLyM+I7UOwdGigTBYfVVQEwe/msZNX/j4pCJTIM14Fsw66Svo1oVrw==
+  /file-saver/2.0.2:
+    dev: false
+    resolution:
+      integrity: sha512-Wz3c3XQ5xroCxd1G8b7yL0Ehkf0TC9oYC6buPFkNnU9EnaPlifeAFCyCh+iewXTyFRcg0a6j3J7FmJsIhlhBdw==
   /filesize/3.6.1:
     dev: false
     engines:
@@ -9735,6 +9752,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-QzdOLiyglosO8VI0YLfXMP8i7rM=
+  /rgbcolor/1.0.1:
+    dev: false
+    engines:
+      node: '>= 0.8.15'
+    resolution:
+      integrity: sha1-1lBezbMEplldom+ktDMHMGd1lF0=
   /rimraf/2.6.3:
     dependencies:
       glob: 7.1.4
@@ -10269,6 +10292,10 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-MTX+MeG5U994cazkjd/9KNAapsHnibjMLnfXodlkXw76JEea0UiNzrqidzo1emMwk7w5Qhc9jd4Bn9TBb1MFwA==
+  /stackblur-canvas/2.2.0:
+    dev: false
+    resolution:
+      integrity: sha512-5Gf8dtlf8k6NbLzuly2NkGrkS/Ahh+I5VUjO7TnFizdJtgpfpLLEdQlLe9umbcnZlitU84kfYjXE67xlSXfhfQ==
   /static-eval/2.0.2:
     dependencies:
       escodegen: 1.11.1
@@ -11693,6 +11720,7 @@ packages:
     version: 1.0.0
 specifiers:
   bootstrap: ^4.3.1
+  canvg: ^2.0.0
   chroma-js: ^2.0.3
   eslint: ^5.8.0
   eslint-config-airbnb: ^17.1.0
@@ -11700,6 +11728,7 @@ specifiers:
   eslint-plugin-import: ^2.17.2
   eslint-plugin-jsx-a11y: ^6.2.1
   eslint-plugin-react: ^7.13.0
+  file-saver: ^2.0.2
   lodash: ^4.17.11
   node-sass: ^4.12.0
   react: ^16.8.6
