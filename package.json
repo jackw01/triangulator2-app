@@ -17,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/jackw01/triangulator2-app/issues"
   },
-  "homepage": "https://jackw01.github.io/triangulator2-app/",
+  "homepage": "https://jackw01.github.io/triangulator2-app/build/",
   "dependencies": {
     "bootstrap": "^4.3.1",
     "canvg": "^2.0.0",
