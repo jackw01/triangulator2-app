@@ -4,7 +4,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
@@ -15,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/jackw01/triangulator2-app/issues"
   },
-  "homepage": "",
+  "homepage": "https://jackw01.github.io/triangulator2-app/",
   "dependencies": {
     "bootstrap": "^4.3.1",
     "canvg": "^2.0.0",

@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.edcb664d.chunk.css",
-    "main.js": "/static/js/main.985c09dd.chunk.js",
-    "main.js.map": "/static/js/main.985c09dd.chunk.js.map",
-    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
-    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
-    "static/js/2.dcaca10a.chunk.js": "/static/js/2.dcaca10a.chunk.js",
-    "static/js/2.dcaca10a.chunk.js.map": "/static/js/2.dcaca10a.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.f68287a29239dc9448d82bf7484ebc67.js": "/precache-manifest.f68287a29239dc9448d82bf7484ebc67.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/main.edcb664d.chunk.css.map": "/static/css/main.edcb664d.chunk.css.map"
+    "main.css": "/triangulator2-app/static/css/main.edcb664d.chunk.css",
+    "main.js": "/triangulator2-app/static/js/main.985c09dd.chunk.js",
+    "main.js.map": "/triangulator2-app/static/js/main.985c09dd.chunk.js.map",
+    "runtime~main.js": "/triangulator2-app/static/js/runtime~main.e86e8357.js",
+    "runtime~main.js.map": "/triangulator2-app/static/js/runtime~main.e86e8357.js.map",
+    "static/js/2.71ba0581.chunk.js": "/triangulator2-app/static/js/2.71ba0581.chunk.js",
+    "static/js/2.71ba0581.chunk.js.map": "/triangulator2-app/static/js/2.71ba0581.chunk.js.map",
+    "index.html": "/triangulator2-app/index.html",
+    "precache-manifest.9cdab251b79e8e4168a7276043cc205c.js": "/triangulator2-app/precache-manifest.9cdab251b79e8e4168a7276043cc205c.js",
+    "service-worker.js": "/triangulator2-app/service-worker.js",
+    "static/css/main.edcb664d.chunk.css.map": "/triangulator2-app/static/css/main.edcb664d.chunk.css.map"
   }
 }
