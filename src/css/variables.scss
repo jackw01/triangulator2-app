@@ -2,8 +2,13 @@
 // Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
 // Custom
-$large-breakpoint: 1024px;
-$medium-breakpoint: 640px;
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 1024px, // Previously 992px
+  xl: 1200px
+);
 
 $enable-shadows: true;
 
@@ -65,8 +70,8 @@ $yiq-contrasted-threshold: 110;
 $yiq-text-light: $foreground-1;
 $yiq-text-dark: $gray-900;
 
-$link-color: darken($color-accent, 10%);
-$link-hover-color: lighten($link-color, 15%);
+$link-color: $color-accent;
+$link-hover-color: lighten($link-color, 7%);
 $btn-link-hover-color: $link-hover-color;
 
 $border-radius: .2rem;

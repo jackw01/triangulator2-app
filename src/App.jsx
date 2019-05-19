@@ -158,7 +158,7 @@ class App extends Component {
     return (
       <Container className='main h-100'>
         <Row className='h-100'>
-          <Col xs='9' className='image-container' id='image-container'>
+          <Col xs='8' lg='9' className='image-container' id='image-container'>
             <svg
               id='image'
               style={this.state.svgSizeCSS}
@@ -166,7 +166,7 @@ class App extends Component {
               ref={this.generateSVG.bind(this)}
             />
           </Col>
-          <Col xs='3' className='controls-container'>
+          <Col xs='4' lg='3' className='controls-container'>
             <Form className='controls-form'>
               <h1 className='header-light header-stylized-text'>triangulator2</h1>
               <small>
@@ -395,13 +395,16 @@ class App extends Component {
               <hr />
               <FormGroup className='color-picker-container'>
                 <Button
+                  size='lg'
                   color='primary'
                   onClick={this.saveImage.bind(this)}
                 >
                   Save Image
                 </Button>
-                &nbsp;
+                <br />
                 <Button
+                  className='spacer-top'
+                  size='lg'
                   color='secondary'
                   onClick={this.saveSVG.bind(this)}
                 >
