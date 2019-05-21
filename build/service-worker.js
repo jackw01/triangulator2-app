@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/triangulator2-app/build/precache-manifest.ddf638ab4517e806f047156c1b8b43df.js"
+  "/triangulator2-app/build/precache-manifest.48951b318f3c786da4f203f9932cd8a7.js"
 );
 
 self.addEventListener('message', (event) => {

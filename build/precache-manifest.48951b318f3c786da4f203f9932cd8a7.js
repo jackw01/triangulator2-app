@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "57837ae5b33228c14ceb40a6088af94d",
+    "revision": "5763106bc3329b36ec170d79b2715ab8",
     "url": "/triangulator2-app/build/index.html"
   },
   {
-    "revision": "b94e30b1affe8f86fd17",
+    "revision": "e0a765c169c0672b9003",
     "url": "/triangulator2-app/build/static/css/main.edcb664d.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/triangulator2-app/build/static/js/2.cee0fe71.chunk.js"
   },
   {
-    "revision": "b94e30b1affe8f86fd17",
-    "url": "/triangulator2-app/build/static/js/main.985c09dd.chunk.js"
+    "revision": "e0a765c169c0672b9003",
+    "url": "/triangulator2-app/build/static/js/main.24022d7e.chunk.js"
   },
   {
     "revision": "ff9bd5580fde111d28d6",

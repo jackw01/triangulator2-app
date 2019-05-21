@@ -1,6 +1,8 @@
 # triangulator2-app
 React web app for the [triangulator2](https://github.com/jackw01/triangulator2) SVG triangle art generator.
 
+![screenshot](screenshot.png)
+
 ### Built with
 * https://github.com/svgdotjs/svg.js
 * https://github.com/gka/chroma.js

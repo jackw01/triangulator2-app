@@ -19,6 +19,9 @@ class App extends Component {
       svgWidth: 3840,
       svgHeight: 2400,
       svgString: '',
+      imageData: [],
+      imageWidth: 0,
+      imageHeight: 0,
       options: {
         isBrowser: true,
         seed: 4,
@@ -45,6 +48,16 @@ class App extends Component {
 
     this.allColorFunctions = [...Object.entries(Triangulator.ColorFunction).map(i => i[1])];
     this.allGradientFunctions = [...Object.entries(Triangulator.GradientFunction).map(i => i[1])];
+
+    /*
+    this.imageColorOverride = (x, y) => {
+      if (this.state.imageData.length > 0) {
+        const x0 = x *
+        return `rgb(${}, ${}, ${})`;
+      } else {
+        return '#000000';
+      }
+    };*/
 
     // Debounce input changes
     this.inputHandler = _.debounce(this.handleOptionChange, 150).bind(this);
@@ -114,6 +127,29 @@ class App extends Component {
       updatedState.options.colorPalette[i] = color.hex;
       this.setState(updatedState);
     };
+  }
+
+  // Handler for image file upload
+  handleFile(target) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const sourceImage = new Image();
+      sourceImage.onload = () => {
+        // Draw image on canvas and extract data
+        const canvas = document.getElementById('imageProcessingCanvas');
+        canvas.width = sourceImage.width;
+        canvas.height = sourceImage.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(sourceImage, 0, 0, canvas.width, canvas.height);
+        this.setState({
+          imageData: ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data,
+          imageWidth: sourceImage.width,
+          imageHeight: sourceImage.height,
+        });
+      };
+      sourceImage.src = event.target.result;
+    };
+    reader.readAsDataURL(target.files[0]);
   }
 
   // Render SVG
@@ -236,7 +272,7 @@ class App extends Component {
                   onChange={e => this.inputHandler(e.target)}
                 />
               </FormGroup>
-              <FormGroup>
+              <FormGroup className={this.state.options.gridMode === 3 ? 'hidden' : ''}>
                 <Label className='input-group-label' for='cellRandomness'>Cell Randomness:</Label>
                 <input
                   id='cellRandomness'
@@ -415,6 +451,10 @@ class App extends Component {
           </Col>
         </Row>
         <canvas
+          id='imageProcessingCanvas'
+          className='hidden'
+        />
+        <canvas
           id='canvas'
           className='hidden'
           width={this.state.svgWidth}
@@ -426,3 +466,13 @@ class App extends Component {
 }
 
 export default App;
+
+/*<FormGroup className='spacer-top'>
+  <Label className='input-group-label' for='image'>Image Input:</Label>
+  <Input
+    id='image'
+    className='w-100'
+    type='file'
+    onChange={e => this.handleFile(e.target)}
+  />
+</FormGroup>*/
