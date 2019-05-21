@@ -82,6 +82,11 @@ class App extends Component {
     }
   }
 
+  // Remove css styles from svg string before saving
+  stripStyles(svgString) {
+    return svgString.replace(/style=\\?".*?\\?"/g, '');
+  }
+
   // Handle input changes from non-text inputs
   handleOptionChange(target) {
     const updatedState = { svgNeedsUpdating: true, options: this.state.options };
@@ -92,6 +97,12 @@ class App extends Component {
       updatedState.options[target.id] = this.allGradientFunctions[parseInt(target.value, 10)];
     } else if (target.step === 1) updatedState.options[target.id] = parseInt(target.value, 10);
     else updatedState.options[target.id] = parseFloat(target.value);
+
+    // Enforce safe width
+    if (target.id === 'width' || target.id === 'height') {
+      console.log('yes')
+      updatedState.options[target.id] = Math.max(updatedState.options[target.id], 256);
+    }
 
     this.setState(updatedState);
   }
@@ -159,6 +170,8 @@ class App extends Component {
     if (svgNeedsUpdating && element) {
       // If update flag is set, unset it before anything else
       await this.setState({ svgNeedsUpdating: false });
+      await this.setState({ svgWidth: options.width, svgHeight: options.height });
+
       element.innerHTML = '';
       const svgString = Triangulator.generate({
         svgInput: element,
@@ -168,17 +181,18 @@ class App extends Component {
 
       // Determine correct css sizing based on image and browser aspect ratios
       const windowAspect = document.getElementById('image-container').clientWidth
-        / document.getElementById('image-container').clientHeight;
+        / document.getElementById('root').clientHeight;
       const svgSizeCSS = { width: '', height: '' };
       if ((options.width / options.height) > windowAspect) svgSizeCSS.width = '100%';
-      else svgSizeCSS.height = '100%';
-      this.setState({ svgSizeCSS, svgWidth: options.width, svgHeight: options.height, svgString });
+      else svgSizeCSS.height = '100vh';
+      this.setState({ svgSizeCSS, svgString });
     }
   }
 
   // Render as image and download
   saveImage() {
-    canvg('canvas', this.state.svgString);
+    console.log(this.stripStyles(this.state.svgString));
+    canvg('canvas', this.stripStyles(this.state.svgString));
     document.getElementById('canvas').toBlob((blob) => {
       saveAs(blob, `tri2-${new Date().toISOString()}.png`);
     });
@@ -186,7 +200,7 @@ class App extends Component {
 
   // Download SVG data
   saveSVG() {
-    const blob = new Blob([this.state.svgString]);
+    const blob = new Blob([this.stripStyles(this.state.svgString)]);
     saveAs(blob, `tri2-${new Date().toISOString()}.svg`);
   }
 
