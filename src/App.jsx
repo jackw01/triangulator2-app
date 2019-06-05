@@ -169,6 +169,7 @@ class App extends Component {
     // TODO: sometimes element is null, iont know wtf is goin on here
     if (svgNeedsUpdating && element) {
       // If update flag is set, unset it before anything else
+      console.time('1');
       await this.setState({ svgNeedsUpdating: false });
       await this.setState({ svgWidth: options.width, svgHeight: options.height });
 
@@ -185,7 +186,9 @@ class App extends Component {
       const svgSizeCSS = { width: '', height: '' };
       if ((options.width / options.height) > windowAspect) svgSizeCSS.width = '100%';
       else svgSizeCSS.height = '100vh';
-      this.setState({ svgSizeCSS, svgString });
+
+      await this.setState({ svgSizeCSS, svgString });
+      console.timeEnd('1');
     }
   }
 
