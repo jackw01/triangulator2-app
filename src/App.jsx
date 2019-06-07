@@ -43,6 +43,8 @@ class App extends Component {
         gradientPositiveFactor: 0.03,
         strokeColor: false,
         strokeWidth: 1,
+        strokeOnly: false,
+        backgroundColor: '#000000',
       },
     };
 
@@ -104,6 +106,9 @@ class App extends Component {
       updatedState.options[target.id] = Math.max(updatedState.options[target.id], 256);
     }
 
+    // Enforce stroke
+    if (!updatedState.options.strokeOnly) updatedState.options.strokeWidth = 1;
+
     this.setState(updatedState);
   }
 
@@ -138,6 +143,13 @@ class App extends Component {
       updatedState.options.colorPalette[i] = color.hex;
       this.setState(updatedState);
     };
+  }
+
+  // Handler for BG color input
+  handleBackgroundColorChange(color) {
+    const updatedState = { svgNeedsUpdating: true, options: this.state.options };
+    updatedState.options.backgroundColor = color.hex;
+    this.setState(updatedState);
   }
 
   // Handler for image file upload
@@ -446,7 +458,49 @@ class App extends Component {
                 />
               </FormGroup>
               <hr />
-              <FormGroup className='color-picker-container'>
+              <FormGroup>
+                <Label className='input-group-label' for='strokeOnly'>Stroke Only Mode:</Label>
+                <ButtonGroup size='sm'>
+                  <Button
+                    id='strokeOnly'
+                    color='secondary'
+                    onClick={this.handleToggle(true).bind(this)}
+                    active={this.state.options.strokeOnly}
+                  >
+                    On
+                  </Button>
+                  <Button
+                    id='strokeOnly'
+                    color='secondary'
+                    onClick={this.handleToggle(false).bind(this)}
+                    active={!this.state.options.strokeOnly}
+                  >
+                    Off
+                  </Button>
+                </ButtonGroup>
+              </FormGroup>
+              <FormGroup className={this.state.options.strokeOnly ? '' : 'hidden'}>
+                <Label className='input-group-label' for='strokeWidth'>Stroke Width:</Label>
+                <input
+                  id='strokeWidth'
+                  type='range'
+                  step='0.001'
+                  min='0.1'
+                  max='20'
+                  defaultValue={this.state.options.strokeWidth}
+                  onChange={e => this.inputHandler(e.target)}
+                />
+              </FormGroup>
+              <FormGroup className={this.state.options.strokeOnly ? 'color-picker-container' : 'hidden'}>
+                <Label className='input-group-label' for='backgroundColor'>Background Color:</Label>
+                <ChromePicker
+                  color={this.state.options.backgroundColor}
+                  disableAlpha
+                  onChangeComplete={this.handleBackgroundColorChange.bind(this)}
+                />
+              </FormGroup>
+              <hr />
+              <FormGroup>
                 <Button
                   size='lg'
                   color='primary'
