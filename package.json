@@ -30,7 +30,7 @@
     "react-dom": "^16.8.6",
     "react-scripts": "^3.0.1",
     "reactstrap": "^8.0.0",
-    "triangulator2": "github:jackw01/triangulator2"
+    "triangulator2": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "^5.8.0",

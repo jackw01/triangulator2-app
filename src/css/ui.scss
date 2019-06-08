@@ -2,7 +2,7 @@
 // Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
 @mixin thumb {
-  background: $btn-bg-gray;
+  background: $thumb-bg-gray;
   box-shadow: $btn-box-shadow;
   border: none;
   outline: none;
@@ -11,7 +11,7 @@
   border-radius: 10px;
 
   &:hover {
-    background: lighten($btn-bg-gray, $btn-input-hover-change);
+    background: lighten($thumb-bg-gray, $btn-input-hover-change);
   }
 }
 
@@ -61,7 +61,7 @@ select {
   background-color: $btn-bg-gray !important;
   box-shadow: $btn-box-shadow !important;
   transition: all 0.15s ease-in-out !important;
-  border: 1px solid $btn-bg-gray !important;
+  border: none !important;
 
   &:hover {
     background-color: lighten($btn-bg-gray, $btn-input-hover-change) !important;
@@ -102,12 +102,13 @@ select {
   input {
     background: $input-bg !important;
     color: $input-color !important;
-    box-shadow: none !important;
+    box-shadow: $input-box-shadow !important;
     border: 1px solid $input-bg !important;
     border-radius: $border-radius !important;
     @include transition();
 
     &:focus {
+      outline: none !important;
       background: lighten($input-bg, 5%) !important;
       border: 1px solid $color-accent-lighter !important;
     }

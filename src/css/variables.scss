@@ -10,7 +10,7 @@ $grid-breakpoints: (
   xl: 1200px
 );
 
-$enable-shadows: false;
+$enable-shadows: true;
 
 $background-1: #1f2124;
 $foreground-lighter: #e2e8f5;
@@ -56,7 +56,7 @@ $grays: (
 
 $theme-colors: (
   "primary": darken($color-accent, 8%),
-  "secondary": $gray-700,
+  "secondary": $gray-800,
   "success": $color-success,
   "danger": $color-danger,
   "warning": $color-warning,
@@ -74,9 +74,9 @@ $link-color: $color-accent;
 $link-hover-color: lighten($link-color, 7%);
 $btn-link-hover-color: $link-hover-color;
 
-$border-radius: .25rem;
+$border-radius: .3rem;
 $border-radius-lg: .3rem;
-$border-radius-sm: .25rem;
+$border-radius-sm: .3rem;
 
 $form-group-margin-bottom: 10px;
 
@@ -91,12 +91,13 @@ $input-border-color: $gray-800;
 $input-border-focus: $color-accent-darker;
 $input-border-width: 1px;
 
-$btn-bg-gray: $gray-700;
+$btn-bg-gray: $gray-800;
+$thumb-bg-gray: $gray-700;
 
 // Defaults
-$btn-box-shadow: 0;
+$btn-box-shadow: 0;// 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.25);
 $btn-active-box-shadow: 0;
-$input-box-shadow: 0;
+$input-box-shadow: 0;// 0 1px 1px rgba(255, 255, 255, 0.2), inset 0 1px 2px rgba(0, 0, 0, 0.2);
 
 $card-bg: lighten($gray-900, 2%);
 
